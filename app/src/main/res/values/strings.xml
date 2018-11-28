@@ -1,0 +1,14 @@
+<resources>
+    <string name="app_name">RGBController</string>
+    <string name="action_settings">Settings</string>
+    <string name="action_rgb">RGB-Space</string>
+    <string name="action_hsv">HSV-Space</string>
+
+    <string name="seekBar_r">Red: %1$d</string>
+    <string name="seekBar_g">Green: %1$d</string>
+    <string name="seekBar_b">Blue: %1$d</string>
+
+    <string name="seekBar_hue">Hue %1$d°</string>
+    <string name="seekBar_saturation">Saturation: %1$f</string>
+    <string name="seekBar_value">Value: %1$f</string>
+</resources>
