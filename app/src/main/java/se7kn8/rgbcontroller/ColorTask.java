@@ -3,6 +3,13 @@ package se7kn8.rgbcontroller;
 import android.os.AsyncTask;
 
 import java.io.IOException;
+import java.net.DatagramPacket;
+import java.net.DatagramSocket;
+import java.net.InetAddress;
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
 
 /**
  * Created by sebkn on 15.01.2018.
@@ -10,43 +17,48 @@ import java.io.IOException;
 
 public class ColorTask extends AsyncTask<Void, Void, Void> {
 
-    public static final int PIN_RED = 5;
-    public static final int PIN_GREEN = 26;
-    public static final int PIN_BLUE = 6;
+    private int r;
+    private int g;
+    private int b;
 
-    private int pin;
-    private int color;
+    private String ip;
+    private int port;
 
-    private ColorTask(int pin, int color) {
-        this.pin = pin;
-        this.color = color;
+    private static final NumberFormat format = new DecimalFormat("000");
+
+    public ColorTask(int r, int g, int b, String ip, int port) {
+        this.r = r;
+        this.g = g;
+        this.b = b;
+        this.ip = ip;
+        this.port = port;
     }
+
+    private DatagramSocket socket;
 
     @Override
     protected Void doInBackground(Void... objects) {
 
-        try{
-            Connection.init();
-            Connection.getStream().write(pin);
-            Connection.getStream().write(color);
-            Connection.getStream().flush();
-        }catch (IOException e){
+        try {
+            String message = "led" + format.format(r) + format.format(g) + format.format(b) + "\n";
+
+            if (socket == null) {
+                socket = new DatagramSocket();
+            }
+
+            byte[] sendData = message.getBytes(Charset.forName("US-ASCII"));
+            DatagramPacket sendPacket = new DatagramPacket(sendData, sendData.length, InetAddress.getByName(ip), port);
+            socket.send(sendPacket);
+
+        } catch (IOException e) {
             e.printStackTrace();
         }
 
         return null;
     }
 
-    public static void updateRed(int red){
-        new ColorTask(PIN_RED, red).execute();
-    }
-
-    public static void updateGreen(int green){
-        new ColorTask(PIN_GREEN, green).execute();
-    }
-
-    public static void updateBlue(int blue){
-        new ColorTask(PIN_BLUE, blue).execute();
+    public static void updateColor(int r, int g, int b, String ip, int port) {
+        new ColorTask(r, g, b, ip, port).execute();
     }
 
 }

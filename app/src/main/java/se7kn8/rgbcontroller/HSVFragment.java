@@ -1,9 +1,14 @@
 package se7kn8.rgbcontroller;
 
-import android.app.Fragment;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
+
+import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -31,7 +36,7 @@ public class HSVFragment extends Fragment implements SeekBar.OnSeekBarChangeList
 
     @Nullable
     @Override
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
         Log.d("HSVFragment", "Created");
         View view = inflater.inflate(R.layout.fragment_hsv, container, false);
 
@@ -66,9 +71,8 @@ public class HSVFragment extends Fragment implements SeekBar.OnSeekBarChangeList
 
         colorView.setBackgroundColor(color);
 
-        ColorTask.updateRed(Color.red(color));
-        ColorTask.updateGreen(Color.green(color));
-        ColorTask.updateBlue(Color.blue(color));
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this.requireActivity());
+        ColorTask.updateColor(Color.red(color), Color.green(color), Color.blue(color), preferences.getString("ip", "192.168.4.1"), Integer.valueOf(preferences.getString("port", "91")));
 
         if (seekBar == hueSeekBar) {
             hueTextView.setText(getString(R.string.seekBar_hue, seekBar.getProgress()));

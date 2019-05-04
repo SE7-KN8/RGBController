@@ -1,15 +1,18 @@
 package se7kn8.rgbcontroller;
 
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.design.widget.BottomNavigationView;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
-import android.view.View;
+
+
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import androidx.navigation.NavController;
+import androidx.navigation.Navigation;
+import androidx.navigation.ui.NavigationUI;
+
 import android.view.Menu;
 import android.view.MenuItem;
+
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -17,29 +20,11 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-        getFragmentManager().beginTransaction().replace(R.id.main_fragment_container, new RGBFragment()).commit();
-
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation);
-        bottomNavigationView.setOnNavigationItemSelectedListener(item -> {
-            System.out.println(item.getItemId());
-            switch (item.getItemId()){
-                case R.id.action_rgb:
-                    getFragmentManager().beginTransaction().setCustomAnimations(android.R.animator.fade_in, android.R.animator.fade_out).replace(R.id.main_fragment_container, new RGBFragment()).commit();
-                    break;
-                case R.id.action_hsv:
-                    getFragmentManager().beginTransaction().setCustomAnimations(android.R.animator.fade_in, android.R.animator.fade_out).replace(R.id.main_fragment_container, new HSVFragment()).commit();
-                    break;
-                case R.id.action_settings:
-                    break;
-            }
-            return true;
-        });
-
-
+        NavController controller = Navigation.findNavController(this, R.id.nav_host_fragment);
+        NavigationUI.setupWithNavController((BottomNavigationView) findViewById(R.id.bottom_navigation), controller);
     }
 
     @Override
@@ -54,6 +39,7 @@ public class MainActivity extends AppCompatActivity {
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
+            Navigation.findNavController(this, R.id.nav_host_fragment).navigate(R.id.action_settings);
             return true;
         }
 
