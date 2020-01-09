@@ -17,7 +17,7 @@ public class Connection {
     public static void init() {
         if (!init) {
             try {
-                socket = new Socket("192.168.178.22", 24578);
+                socket = new Socket("192.168.178.100", 24578);
                 stream = socket.getOutputStream();
                 init = true;
             } catch (IOException e) {
